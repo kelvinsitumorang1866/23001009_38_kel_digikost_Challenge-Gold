@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kelvinsitumorang1866/23001009_38_kel_digikost_Challenge-Gold.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kelvinsitumorang1866/23001009_38_kel_digikost_Challenge-Gold/issues"
+  },
+  "homepage": "https://github.com/kelvinsitumorang1866/23001009_38_kel_digikost_Challenge-Gold#readme",
+  "dependencies": {
+    "color": "^4.2.3"
+  }
+}
