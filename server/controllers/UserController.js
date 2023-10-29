@@ -1,42 +1,21 @@
 const { json } = require("express");
-const dbAccount = require("../db/account.json");
+const userModel = require("../models/UserModel.js");
 const fs = require("fs");
 const { error, log } = require("console");
+const knex = require("../knexfile.js")
+
+
 class UserController {
     static login(req, res) { 
       res.render("auth/login");
     }
-    static register(req , res){
+    static async register(req , res){
       try {
-        let allData = dbAccount.accountData;
-        let fixID;
-        let{ name, email, phoneNumber,NIk,password} = req.body;
-
-        function dynamicId (){
-          if (!allData.length){
-            fixID = 1
-          } else {
-            fixID = allData.length  + 1 
-          }
-          return fixID;
-        }
-        dynamicId()
-
-        let dataInputConteiner = {
-          "id": fixID,
-          "name": req.body.name,
-          "email": req.body.email,
-          "phoneNumber": req.body.phoneNumber,
-          "NIK": req.body.NIk,
-          "password": req.body.password
-
-        }
-        allData.push(dataInputConteiner);
-        let manipulDataToString = JSON.stringify(dbAccount);
-        fs.writeFileSync("./db/account.json", manipulDataToString);
-
+        let{ Full_Name,Username, email, phoneNumber,KTP,password} = req.body;
+        await userModel.createUser(knex, Full_Name,Username, email, password,KTP,phoneNumber);
         res.status(201).json("account added");
       } catch (error) {
+        console.log(error);
         res.status(500).json(error)
         
       }
@@ -44,31 +23,11 @@ class UserController {
 
     }
 
-    static profil (req,res){
+    static async profil (req,res){
       try {
-        let allData = dbAccount.accountData;
         let idInput = req.params.id;
-        let dataContainer;
-        let massage;
-        
-        for (let index = 0; index < allData.length; index++) {
-          if(allData[index].id == idInput){
-            dataContainer = allData[index];
-          }
-          else{
-           
-            
-          }
-          
-        }
-        res.status(200).json({dataContainer})
-        
-        
-      
-       
-       
-  
-        
+        const data = await userModel.getUserById(knex,idInput);
+        res.status(200).json({data})
       } catch (error) {
         res.status(500).json(error);
         
