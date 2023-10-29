@@ -18,7 +18,7 @@ const UserModel = {
     return database('users').where({ email }).first();
   },
 
-  // Add more functions for updating, deleting users, etc. if needed
+  
 };
 
 module.exports = UserModel;
