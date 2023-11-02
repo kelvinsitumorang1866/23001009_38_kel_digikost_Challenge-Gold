@@ -1,5 +1,8 @@
-// const dbRoom = require("../db/room.json");
 const fs = require("fs");
+const { json } = require("express");
+const roomModel = require("../models/RoomsModel");
+const { error, log } = require("console");
+const knex = require("../knexfile.js")
 
 class Roomcontroller {
      static index (req, res){
@@ -9,78 +12,56 @@ class Roomcontroller {
      static addForm(req, res){
         res.render("Room/addRoomForm")
      }
-     static addRoom(req,res){
+     static async addRoom(req,res){
       try {
-         let {Name, status} = req.body;
-        let fixID;
-        let allData = dbRoom.roomData;
-        function dynamicId (){
-         if (!allData.length){
-           fixID = 1
-         } else {
-           fixID = allData.length  + 1 
-         }
-         return fixID;
-       }
-       dynamicId()
-       let dataContainer = {
-         "id" : fixID,
-         "name": Name,
-         "status": status
-       }
-       allData.push(dataContainer);
-       
-       let manipulDataToString = JSON.stringify(dbRoom);
-       fs.writeFileSync("./db/room.json",manipulDataToString);
-
-       res.status(201).json("room added");
-
-         
-      } catch (error) {
-         res.status(500).json(error)
-         
-      }
-        
-        
-        
-
-     }
-     static searchRoom( req, res){
-      try {
-         let idInput = req.params.id;
-         let allData = dbRoom.roomData;
-         let dataContainer;
-         for (let index = 0; index < allData.length; index++) {
-            
-            if(allData[index].id == idInput){
-               dataContainer = allData[index]
-   
-            } else{
-   
-            }
-            
-         }
-         res.status(200).json(dataContainer);
+         let {  Room_name,Room_pict,price,building_id} = req.body
+         await roomModel.createRooms(knex,Room_name,Room_pict,price,building_id);
+         res.status(201).json("room added");
          
          
       } catch (error) {
+
+         console.log(error);
          res.status(500).json(error);
          
       }
      
      }
 
-     static deleteRoom (req,res){
-      let idParam = req.params.id;
-      let allData = dbRoom.roomData;
-      const indexToDelete = allData.findIndex(obj => obj.id == idParam);
-      allData.splice(indexToDelete,1)
+     static async deleteRoom (req,res){
+      try {
+         let targetId = req.params.id;
+         await roomModel.deleteRoomById(knex,targetId);
+         res.status(200).json("room deleted");
+      } catch (error) {
+         res.status(500).json(error);
+         
+      }
+   
+     }
 
-      let manipulDataToString = JSON.stringify(dbRoom);
-      fs.writeFileSync("./db/room.json", manipulDataToString);
-   
-     res.status(202).json(allData)
-   
+     static async detailRoom (req,res){
+      try {
+         let targetedId = req.params.id;
+         const theData = await roomModel.getRoomById(knex,targetedId);
+         res.status(200).json(theData);
+         
+      } catch (error) {
+         res.status(500).json(error);
+         
+      }
+     }
+     static async updateRoom(req,res){
+      try {
+         let targetedId = req.params.id;
+         let {  Room_name,Room_pict,price,building_id} = req.body
+         await roomModel.updateRoom(knex,targetedId,Room_name,Room_pict,price,building_id);
+         res.status(200).json("room updated");
+         
+      } catch (error) {
+         res.status(500).json(error)
+         
+      }
      }
 
 

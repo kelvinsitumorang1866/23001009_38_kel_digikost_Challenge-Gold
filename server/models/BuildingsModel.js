@@ -33,4 +33,4 @@ const BuildingsModel ={
 
 }
 
-module.exports = BuildingsModel
+module.exports = BuildingsModel;
