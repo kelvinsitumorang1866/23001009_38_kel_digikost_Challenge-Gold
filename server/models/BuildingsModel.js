@@ -27,6 +27,9 @@ const BuildingsModel ={
         return database("buildings").where({id}).update(userInput);
 
 
+    },
+    getAll : async function(knex){
+        return await database("buildings").select("*");
     }
 
 

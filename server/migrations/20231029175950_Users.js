@@ -13,6 +13,7 @@ exports.up = function(knex) {
         table.bigInteger("phoneNumber");
         table.integer("Room_id").unsigned().references("id").inTable("rooms").nullable();
         table.enu("roles",["Admin","User"]).defaultTo("User");
+        table.timestamp('deadline');
 
 
 
